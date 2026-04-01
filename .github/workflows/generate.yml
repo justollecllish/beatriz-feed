@@ -1,0 +1,31 @@
+name: Generar Feed RSS Beatriz
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # cada 6 horas
+  workflow_dispatch:  # permite correrlo manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias
+        run: pip install requests
+
+      - name: Generar feed
+        run: python generate_feed.py
+
+      - name: Publicar feed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add feed.xml
+          git diff --staged --quiet || git commit -m "Actualizar feed RSS"
+          git push
