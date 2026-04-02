@@ -33,7 +33,6 @@ def get_aldo():
         title = item.findtext('title', '')
         link = item.findtext('link', '')
         pub_date = item.findtext('pubDate', '')
-        # Solo artículos de Aldo
         creator = item.findtext('{http://purl.org/dc/elements/1.1/}creator', '')
         if 'Mariátegui' in creator or 'Mariateg' in link or 'aldo' in link.lower():
             items.append({
@@ -52,15 +51,14 @@ todos = beatriz + aldo
 rss = '''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
-<title>Opinión Perú - Beatriz Mejía & Aldo Mariátegui</title>
+<title>Opinión Perú - Beatriz Mejía &amp; Aldo Mariátegui</title>
 <link>https://justollecllish.github.io/beatriz-feed/</link>
 <description>Columnas de opinión seleccionadas</description>
 '''
 
 for a in todos:
-    titulo = a['titulo'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
     rss += f'''<item>
-<title>[{a["autor"]}] {titulo}</title>
+<title><![CDATA[[{a["autor"]}] {a["titulo"]}]]></title>
 <link>{a['url']}</link>
 <guid>{a['url']}</guid>
 <pubDate>{a['fecha']}</pubDate>
